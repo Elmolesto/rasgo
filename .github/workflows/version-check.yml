@@ -1,0 +1,39 @@
+name: Version Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "csv_extension_loader.rb"
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Extract current version
+        id: version
+        run: |
+          CURRENT_VERSION=$(grep "CURRENT_VERSION = " csv_extension_loader.rb | cut -d'"' -f2)
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if version tag exists
+        id: check-tag
+        run: |
+          if git tag -l "v${{ steps.version.outputs.current_version }}" | grep -q "v${{ steps.version.outputs.current_version }}"; then
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create new tag if version changed
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ steps.version.outputs.current_version }}" -m "Release version ${{ steps.version.outputs.current_version }}"
+          git push origin "v${{ steps.version.outputs.current_version }}"

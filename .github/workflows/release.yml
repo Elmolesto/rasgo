@@ -11,13 +11,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Create RBZ file
+        run: |
+          # Create a temporary directory
+          mkdir -p temp_plugin
+
+          # Copy the plugin files
+          cp -r csv_extension temp_plugin/
+          cp csv_extension_loader.rb temp_plugin/
+
+          # Create the RBZ file
+          cd temp_plugin
+          zip -r ../rasgo_csv.rbz *
+          cd ..
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            *.rbz
-            *.rb
+            rasgo_csv.rbz
+            csv_extension_loader.rb
+            csv_extension/**/*.rb
           draft: false
           prerelease: false
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
