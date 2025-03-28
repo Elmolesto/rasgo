@@ -6,7 +6,7 @@ require 'json'
 module CSVExtension
   PLUGIN_DIR = File.dirname(__FILE__) + "/csv_extension"
   PLUGIN_FILE = PLUGIN_DIR + "/main.rb"
-  CURRENT_VERSION = "0.0.3"
+  CURRENT_VERSION = "0.0.4"
   GITHUB_API_URL = "https://api.github.com/repos/Elmolesto/rasgo/releases/latest"
 
   def self.check_for_updates
