@@ -43,8 +43,6 @@ jobs:
           name: Release ${{ github.ref_name || inputs.tag }}
           files: |
             rasgo_csv.rbz
-            csv_extension_loader.rb
-            csv_extension/**/*.rb
           draft: false
           prerelease: false
           generate_release_notes: true
