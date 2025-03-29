@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-tags: true
-          ref: ${{ github.ref }}
+          ref: ${{ github.ref_name || inputs.tag }}
 
       - name: Create RBZ file
         run: |
@@ -40,6 +40,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name || inputs.tag }}
+          name: Release ${{ github.ref_name || inputs.tag }}
           files: |
             rasgo_csv.rbz
             csv_extension_loader.rb
@@ -47,3 +48,4 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
+          fail_on_unmatched_files: false
